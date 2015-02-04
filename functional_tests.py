@@ -2,7 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
-
+import time
 
 class NewVisitorTest(unittest.TestCase):
 
@@ -39,20 +39,24 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-                        any(row.text == '1: Learn TDD testing' for row in rows),
-                        "New to-do item did not appear in table"
-                        )
+        self.assertIn('1: Learn TDD testing', [row.text for row in rows])
 
         # There is still a text box inviting him to add another item.
         # He enters "Buy a testing goat"
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.keys('Buy a testing goat')
+        inputbox.send_keys(Keys.ENTER)
 
-# The page updates again, and now shows both items on his list
+        # The page updates again, and now shows both items on his list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Learn TDD testing', [row.text for row in rows])
+        self.assertIn('2: Buy a testing goat', [row.text for row in rows])
 
-# Chuck wonders whether the site will remember his list. Then he sees
-# that the site has generated a unique URL for him -- some explanatory
-# text to that effect.
+        # Chuck wonders whether the site will remember his list. Then he sees
+        # that the site has generated a unique URL for him -- there's some explanatory
+        # text to that effect.
+        self.fail('Finish the test')
 
 # She visits that URL - his to-do list is still there.
 
