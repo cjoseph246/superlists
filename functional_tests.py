@@ -44,7 +44,7 @@ class NewVisitorTest(unittest.TestCase):
         # There is still a text box inviting him to add another item.
         # He enters "Buy a testing goat"
         inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox = self.keys('Buy a testing goat')
+        inputbox.send_keys('Buy a testing goat')
         inputbox.send_keys(Keys.ENTER)
 
         # The page updates again, and now shows both items on his list
