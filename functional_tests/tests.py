@@ -15,6 +15,11 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Chuck heard about a brand new to-do app.  He goes
         # to check out its homepage
@@ -40,7 +45,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
         chuck_list_url = self.browser.current_url
         self.assertRegex(chuck_list_url, '/lists/.+')
-        self.check_for_row_in_list_table('1. Learn TDD testing')
+        self.check_for_row_in_list_table('1: Learn TDD testing')
 
         # There is still a text box inviting him to add another item.
         # He enters "Buy a testing goat"
@@ -49,9 +54,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
         # The page updates again, and now shows both items on his list
-        self.check_for_row_in_list_table('2: Buy a testing goat')
         self.check_for_row_in_list_table('1: Learn TDD testing')
-        
+        self.check_for_row_in_list_table('2: Buy a testing goat')
        
         ##### Now a new user, Jim, comes along to the site. #####
         
@@ -59,7 +63,9 @@ class NewVisitorTest(LiveServerTestCase):
         ## We use a new browser session to make sure that no information of
         ## Chuck's is coming through from cookies etc
         self.browser.quit()
+        time.sleep(2)
         self.browser = webdriver.Firefox()
+        time.sleep(2)
         
         # Jim visits the home page. There is no sign of Chuck's list
         self.browser.get(self.live_server_url)
