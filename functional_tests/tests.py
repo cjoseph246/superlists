@@ -38,10 +38,9 @@ class NewVisitorTest(LiveServerTestCase):
         # When he hits enter, the page updates, and now the pages lists
         # "1: Learn TDD testing" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Learn TDD testing', [row.text for row in rows])
+        chuck_list_url = self.browser.current_url
+        self.assertRegex(chuck_list_url, '/lists/.+')
+        self.check_for_row_in_list_table('1. Learn TDD testing')
 
         # There is still a text box inviting him to add another item.
         # He enters "Buy a testing goat"
@@ -50,16 +49,43 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
         # The page updates again, and now shows both items on his list
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Learn TDD testing', [row.text for row in rows])
-        self.assertIn('2: Buy a testing goat', [row.text for row in rows])
+        self.check_for_row_in_list_table('2: Buy a testing goat')
+        self.check_for_row_in_list_table('1: Learn TDD testing')
+        
+       
+        ##### Now a new user, Jim, comes along to the site. #####
+        
+       
+        ## We use a new browser session to make sure that no information of
+        ## Chuck's is coming through from cookies etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+        
+        # Jim visits the home page. There is no sign of Chuck's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Learn TDD testing', page_text)
+        self.assertNotIn('testing goat', page_text)
+        
+        # Jim starts a new list by entering a new item.  He is less
+        # interesting than Chuck...
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        
+        # Jim gets his own unique URL
+        jim_list_url = self.browser.current_url
+        self.assertRegex(jim_list_url, '/lists/.+')
+        self.assertNotEqual(jim_list_url, chuck_list_url)
+        
+        # Again, there is no trace of Chuck's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Learn TDD testing', page_text)
+        self.assertIn('Buy milk', page_text)
 
-        # Chuck wonders whether the site will remember his list. Then he sees
-        # that the site has generated a unique URL for him -- there's some explanatory
-        # text to that effect.
-        self.fail('Finish the test')
+        # Satisfied, they both go back to sleep
 
-# He visits that URL - his to-do list is still there.
 
-# Satisfied, he goes back to sleep
+
+
+
