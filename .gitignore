@@ -3,3 +3,5 @@ __pycache__
 *.pyc
 superlists/settings_secret.py
 git
+*.sqlite3
+.buildpacks
