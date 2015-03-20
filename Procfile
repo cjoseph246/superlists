@@ -1,1 +1,1 @@
-web: gunicorn superlists.wsgi -b 0.0.0.0:$PORT
+web: gunicorn superlists.wsgi
