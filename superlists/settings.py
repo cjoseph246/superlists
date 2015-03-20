@@ -7,7 +7,7 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
-from superlists.settings_secret import *
+#from superlists.settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -18,7 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_key()
+#SECRET_KEY = get_key()
+SECRET_KEY = '9z&bs&**n-2=rgnmxr7_^rappz4jsyj^pym7k*amz!$&1ih(qi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
