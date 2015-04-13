@@ -1,5 +1,5 @@
 
-from .base import FunctionalTest
+from functional_tests.base import FunctionalTest
 
 
 class LayoutAndStylingTest(FunctionalTest):

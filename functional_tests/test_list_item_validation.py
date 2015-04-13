@@ -1,6 +1,6 @@
 
-from .base import FunctionalTest
-from unittest import skip
+from functional_tests.base import FunctionalTest
+
 
 
 class ItemValidationTest(FunctionalTest):
